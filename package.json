@@ -1,0 +1,24 @@
+{
+  "name": "big-commerce",
+  "version": "0.0.1",
+  "description": "Test application for interacting w/ the Big Commerce API",
+  "main": "bigcom.js",
+  "scripts": {
+    "test": "node tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stevekane/big-commerce.git"
+  },
+  "keywords": [
+    "big",
+    "commerce",
+    "awesome"
+  ],
+  "author": "Steve Kane",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stevekane/big-commerce/issues"
+  },
+  "homepage": "https://github.com/stevekane/big-commerce"
+}
