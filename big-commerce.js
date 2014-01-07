@@ -29,11 +29,20 @@ var buildBaseOptions = function (bigC, urlSuffix) {
   };
 };
 
+/**
+ * PRODUCTS 
+ * */
+
 BigCommerce.prototype.getProducts = function (qs, cb) {
   var options = extend(
     buildBaseOptions(this, "products"),
     { qs: qs }
   );
+  return request(options, cb);
+};
+
+BigCommerce.prototype.getProduct = function (id, cb) {
+  var options = buildBaseOptions(this, "products/" + String(id));
   return request(options, cb);
 };
 
@@ -45,7 +54,7 @@ BigCommerce.prototype.getProducts = function (qs, cb) {
 BigCommerce.prototype.getProductsBySKU = function (sku, cb) {
   var options = extend(
     buildBaseOptions(this, "products"),
-    { qs: {sku: sku}}
+    { qs: {sku: sku} }
   );
   return request(options, cb);
 };
@@ -65,5 +74,39 @@ BigCommerce.prototype.updateProduct = function (id, attributes, cb) {
   );
   return request.put(options, cb);
 };
+
+
+/**
+ * COUPONS
+ * */
+BigCommerce.prototype.getCoupons = function (qs, cb) {
+  var options = extend(
+    buildBaseOptions(this, "coupons"),
+    { qs: qs }
+  );
+  return request(options, cb);
+};
+
+BigCommerce.prototype.getCoupon = function (id, cb) {
+  var options = buildBaseOptions(this, "coupons/" + String(id));
+  return request(options, cb);
+};
+
+BigCommerce.prototype.createCoupon = function (attributes, cb) {
+  var options = extend(
+    buildBaseOptions(this, "coupons"), 
+    { body: JSON.stringify(attributes) }
+  );
+  return request.post(options, cb);
+};
+
+BigCommerce.prototype.updateCoupon = function (id, attributes, cb) {
+  var options = extend(
+    buildBaseOptions(this, "coupons/" + String(id)), 
+    { body: JSON.stringify(attributes) }
+  );
+  return request.put(options, cb);
+};
+
 
 module.exports = BigCommerce
