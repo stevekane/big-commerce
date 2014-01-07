@@ -2,7 +2,7 @@
   "name": "big-commerce",
   "version": "0.0.1",
   "description": "Test application for interacting w/ the Big Commerce API",
-  "main": "bigcom.js",
+  "main": "big-commerce.js",
   "scripts": {
     "test": "node tests"
   },

@@ -13,34 +13,35 @@ var bigC = new BigCommerce(config.api.username, config.api.key, config.api.url);
 //bigC.getProduct(32)
 //.pipe(JSONStream.parse())
 //.pipe(printer)
-
+//
 //var newProduct = {
-//  "name":"WHOA THIS IS GREAT",
+//  "name":"Jankity",
 //  "price":19.99,
 //  "categories":[2],
 //  "type":"physical",
 //  "availability":"available", 
 //  "weight":0
 //};
-
+//
 //bigC.createProduct(newProduct)
 //.pipe(JSONStream.parse())
 //.pipe(printer)
+//
 
-//bigC.updateProduct(84, {name: "ManChild"})
-//.pipe(JSONStream.parse("name"))
+//bigC.updateProduct(84, {name: "Ladybug"})
+//.pipe(JSONStream.parse())
 //.pipe(printer)
 
 //bigC.getProductsBySKU("bestfish")
 //.pipe(JSONStream.parse())
 //.pipe(printer)
-
+//
 //bigC.getCoupon(2)
 //.pipe(JSONStream.parse())
 //.pipe(printer)
-
+//
 //var newCoupon = {
-//  "code": "50OFF",
+//  "code": "60OFF",
 //  "type": "percentage_discount",
 //  "name": "testcoupon1",
 //  "amount": 50.00,
@@ -59,5 +60,3 @@ var bigC = new BigCommerce(config.api.username, config.api.key, config.api.url);
 //bigC.updateCoupon(5, {name: "fancy ole coupon"})
 //.pipe(JSONStream.parse())
 //.pipe(printer)
-
-

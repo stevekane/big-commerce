@@ -1,8 +1,6 @@
 var request = require('request')
-  , qs = require('querystring')
-  , pick = require('lodash').pick
-  , clone = require('lodash').clone
   , extend = require('lodash').extend
+  , partial = require('lodash').partial
 
 var BigCommerce = function (user, pass, storeURL) {
   this.user = user;
@@ -25,26 +23,50 @@ var buildBaseOptions = function (bigC, urlSuffix) {
     headers: {
       "Content-type": "application/json",
     },
-    "pool.maxSockets": 300
+    "pool.maxSockets": 1000
   };
 };
 
-/**
- * PRODUCTS 
- * */
-
-BigCommerce.prototype.getProducts = function (qs, cb) {
+//generic get multiple function
+var getMultiple = function (type, qs, cb) {
   var options = extend(
-    buildBaseOptions(this, "products"),
+    buildBaseOptions(this, type),
     { qs: qs }
   );
   return request(options, cb);
 };
 
-BigCommerce.prototype.getProduct = function (id, cb) {
-  var options = buildBaseOptions(this, "products/" + String(id));
+//generic get single function
+var getSingle = function (type, id, cb) {
+  var options = buildBaseOptions(this, type + "/" + String(id));
   return request(options, cb);
 };
+
+//generic create function
+var create = function (type, attributes, cb) {
+  var options = extend(
+    buildBaseOptions(this, type), 
+    { body: JSON.stringify(attributes) }
+  );
+  return request.post(options, cb);
+};
+
+//generic update function
+var update = function (type, id, attributes, cb) {
+  var options = extend(
+    buildBaseOptions(this, type + "/" + String(id)), 
+    { body: JSON.stringify(attributes) }
+  );
+  return request.put(options, cb);
+};
+
+/**
+ * PRODUCTS 
+ * */
+BigCommerce.prototype.getProducts = partial(getMultiple, "products");
+BigCommerce.prototype.getProduct = partial(getSingle, "products");
+BigCommerce.prototype.createProduct = partial(create, "products");
+BigCommerce.prototype.updateProduct = partial(update, "products");
 
 /*
  * This is an alternative way to search for a product by its SKU
@@ -59,54 +81,12 @@ BigCommerce.prototype.getProductsBySKU = function (sku, cb) {
   return request(options, cb);
 };
 
-BigCommerce.prototype.createProduct = function (attributes, cb) {
-  var options = extend(
-    buildBaseOptions(this, "products"), 
-    { body: JSON.stringify(attributes) }
-  );
-  return request.post(options, cb);
-};
-
-BigCommerce.prototype.updateProduct = function (id, attributes, cb) {
-  var options = extend(
-    buildBaseOptions(this, "products/" + String(id)), 
-    { body: JSON.stringify(attributes) }
-  );
-  return request.put(options, cb);
-};
-
-
 /**
  * COUPONS
  * */
-BigCommerce.prototype.getCoupons = function (qs, cb) {
-  var options = extend(
-    buildBaseOptions(this, "coupons"),
-    { qs: qs }
-  );
-  return request(options, cb);
-};
-
-BigCommerce.prototype.getCoupon = function (id, cb) {
-  var options = buildBaseOptions(this, "coupons/" + String(id));
-  return request(options, cb);
-};
-
-BigCommerce.prototype.createCoupon = function (attributes, cb) {
-  var options = extend(
-    buildBaseOptions(this, "coupons"), 
-    { body: JSON.stringify(attributes) }
-  );
-  return request.post(options, cb);
-};
-
-BigCommerce.prototype.updateCoupon = function (id, attributes, cb) {
-  var options = extend(
-    buildBaseOptions(this, "coupons/" + String(id)), 
-    { body: JSON.stringify(attributes) }
-  );
-  return request.put(options, cb);
-};
-
+BigCommerce.prototype.getCoupons = partial(getMultiple, "coupons");
+BigCommerce.prototype.getCoupon = partial(getSingle, "coupons");
+BigCommerce.prototype.createCoupon = partial(create, "coupons");
+BigCommerce.prototype.updateCoupon = partial(update, "coupons");
 
 module.exports = BigCommerce
