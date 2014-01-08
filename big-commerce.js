@@ -90,9 +90,6 @@ BigCommerce.prototype.getProductsBySKU = function (sku, cb) {
   return request(options, cb);
 };
 
-/**
- * COUPONS
- * */
 extend(BigCommerce.prototype, {
   getProducts: partial(getMultiple, "products"),
   getProduct: partial(getSingle, "products"),
