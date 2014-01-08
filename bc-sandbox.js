@@ -6,14 +6,51 @@ var BigCommerce = require('./big-commerce')
 
 var bigC = new BigCommerce(config.api.username, config.api.key, config.api.url);
 
+bigC.getOrderStatuses()
+.pipe(JSONStream.parse())
+.pipe(printer, {end: false})
+
+bigC.getOrderStatus(1)
+.pipe(JSONStream.parse())
+.pipe(printer, {end: false})
+
+//bigC.getCategories()
+//.pipe(JSONStream.parse())
+//.pipe(printer, {end: false})
+//
+//bigC.getCategory(1)
+//.pipe(JSONStream.parse())
+//.pipe(printer, {end: false})
+//
+//bigC.getCategoryCount()
+//.pipe(JSONStream.parse())
+//.pipe(printer, {end: false})
+
+
+//bigC.getBrands()
+//.pipe(JSONStream.parse())
+//.pipe(printer, {end: false})
+//
+//bigC.getBrand(34)
+//.pipe(JSONStream.parse())
+//.pipe(printer, {end: false})
+//
+//bigC.getBrandCount()
+//.pipe(JSONStream.parse())
+//.pipe(printer, {end: false})
+
+//bigC.getProductCount()
+//.pipe(JSONStream.parse())
+//.pipe(printer, {end: false})
+//
 //bigC.getProducts({limit: 1})
 //.pipe(JSONStream.parse())
-//.pipe(printer)
-
+//.pipe(printer, {end: false})
+//
 //bigC.getProduct(32)
 //.pipe(JSONStream.parse())
-//.pipe(printer)
-//
+//.pipe(printer, {end: false})
+
 //var newProduct = {
 //  "name":"Jankity",
 //  "price":19.99,
@@ -25,20 +62,20 @@ var bigC = new BigCommerce(config.api.username, config.api.key, config.api.url);
 //
 //bigC.createProduct(newProduct)
 //.pipe(JSONStream.parse())
-//.pipe(printer)
+//.pipe(printer, {end: false})
 //
-
+//
 //bigC.updateProduct(84, {name: "Ladybug"})
 //.pipe(JSONStream.parse())
-//.pipe(printer)
-
+//.pipe(printer, {end: false})
+//
 //bigC.getProductsBySKU("bestfish")
 //.pipe(JSONStream.parse())
-//.pipe(printer)
-//
+//.pipe(printer, {end: false})
+
 //bigC.getCoupon(2)
 //.pipe(JSONStream.parse())
-//.pipe(printer)
+//.pipe(printer, {end: false})
 //
 //var newCoupon = {
 //  "code": "60OFF",
@@ -55,8 +92,8 @@ var bigC = new BigCommerce(config.api.username, config.api.key, config.api.url);
 //
 //bigC.createCoupon(newCoupon)
 //.pipe(JSONStream.parse())
-//.pipe(printer)
+//.pipe(printer, {end: false})
 //
 //bigC.updateCoupon(5, {name: "fancy ole coupon"})
 //.pipe(JSONStream.parse())
-//.pipe(printer)
+//.pipe(printer, {end: false})

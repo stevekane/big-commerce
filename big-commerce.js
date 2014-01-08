@@ -42,6 +42,11 @@ var getSingle = function (type, id, cb) {
   return request(options, cb);
 };
 
+var getCount = function (type, cb) {
+  var options = buildBaseOptions(this, type + "/" + "count");
+  return request(options, cb);
+};
+
 //generic create function
 var create = function (type, attributes, cb) {
   var options = extend(
@@ -60,13 +65,17 @@ var update = function (type, id, attributes, cb) {
   return request.put(options, cb);
 };
 
-/**
- * PRODUCTS 
- * */
-BigCommerce.prototype.getProducts = partial(getMultiple, "products");
-BigCommerce.prototype.getProduct = partial(getSingle, "products");
-BigCommerce.prototype.createProduct = partial(create, "products");
-BigCommerce.prototype.updateProduct = partial(update, "products");
+//generic delete multiple function
+var deleteMultiple = function (type, cb) {
+  var options = buildBaseOptions(this, type);
+  return request.delete(options, cb);
+};
+
+//generic delete single function
+var deleteSingle = function (type, id, cb) {
+  var options = buildBaseOptions(this, type + "/" + String(id));
+  return request.delete(options, cb);
+};
 
 /*
  * This is an alternative way to search for a product by its SKU
@@ -84,9 +93,68 @@ BigCommerce.prototype.getProductsBySKU = function (sku, cb) {
 /**
  * COUPONS
  * */
-BigCommerce.prototype.getCoupons = partial(getMultiple, "coupons");
-BigCommerce.prototype.getCoupon = partial(getSingle, "coupons");
-BigCommerce.prototype.createCoupon = partial(create, "coupons");
-BigCommerce.prototype.updateCoupon = partial(update, "coupons");
+extend(BigCommerce.prototype, {
+  getProducts: partial(getMultiple, "products"),
+  getProduct: partial(getSingle, "products"),
+  getProductCount: partial(getCount, "products"),
+  createProduct: partial(create, "products"),
+  updateProduct: partial(update, "products"),
+  deleteProducts: partial(deleteMultiple, "products"),
+  deleteProduct: partial(deleteSingle, "products"),
+
+  getCoupons: partial(getMultiple, "coupons"),
+  getCoupon: partial(getSingle, "coupons"),
+  createCoupon: partial(create, "coupons"),
+  updateCoupon: partial(update, "coupons"),
+  deleteCoupons: partial(deleteMultiple, "coupons"),
+  deleteCoupon: partial(deleteSingle, "coupons"),
+
+  getBrands: partial(getMultiple, "brands"),
+  getBrand: partial(getSingle, "brands"),
+  getBrandCount: partial(getCount, "brands"),
+  createBrand: partial(create, "brands"),
+  updateBrand: partial(update, "brands"),
+  deleteBrands: partial(deleteMultiple, "brands"),
+  deleteBrand: partial(deleteSingle, "brands"),
+
+  getCategories: partial(getMultiple, "categories"),
+  getCategory: partial(getSingle, "categories"),
+  getCategoryCount: partial(getCount, "categories"),
+  createCategory: partial(create, "categories"),
+  updateCategory: partial(update, "categories"),
+  deleteCategorys: partial(deleteMultiple, "categories"),
+  deleteCategory: partial(deleteSingle, "categories"),
+
+  getOrderStatuses: partial(getMultiple, "orderstatuses"),
+  getOrderStatus: partial(getSingle, "orderstatuses"),
+
+  getCustomerGroups: partial(getMultiple, "customer_groups"),
+  getCustomerGroup: partial(getSingle, "customer_groups"),
+  getCustomerGroupCount: partial(getCount, "customer_groups"),
+  createCustomerGroup: partial(create, "customer_groups"),
+  updateCustomerGroup: partial(update, "customer_groups"),
+  deleteCustomerGroups: partial(deleteMultiple, "customer_groups"),
+  deleteCustomerGroup: partial(deleteSingle, "customer_groups"),
+
+  getTime: partial(getMultiple, "time"),
+
+  getStore: partial(getMultiple, "store"),
+  
+  getCountries: partial(getMultiple, "countries"),
+  getCountry: partial(getSingle, "countries"),
+  getCountriesCount: partial(getCount, "countries"),
+
+  getStates: partial(getMultiple, "countries/states"),
+  getState: partial(getSingle, "countries/states"),
+  getStatesCount: partial(getCount, "countries/states"),
+
+  getCustomers: partial(getMultiple, "customers"),
+  getCustomer: partial(getSingle, "customers"),
+  getCustomerCount: partial(getCount, "customers"),
+  createCustomer: partial(create, "customers"),
+  updateCustomer: partial(update, "customers"),
+  deleteCustomers: partial(deleteMultiple, "customers"),
+  deleteCustomer: partial(deleteSingle, "customers"),
+});
 
 module.exports = BigCommerce
