@@ -139,11 +139,11 @@ extend(BigCommerce.prototype, {
   
   getCountries: partial(getMultiple, "countries"),
   getCountry: partial(getSingle, "countries"),
-  getCountriesCount: partial(getCount, "countries"),
+  getCountryCount: partial(getCount, "countries"),
 
   getStates: partial(getMultiple, "countries/states"),
   getState: partial(getSingle, "countries/states"),
-  getStatesCount: partial(getCount, "countries/states"),
+  getStateCount: partial(getCount, "countries/states"),
 
   getCustomers: partial(getMultiple, "customers"),
   getCustomer: partial(getSingle, "customers"),
