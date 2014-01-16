@@ -6,13 +6,13 @@ var BigCommerce = require('./big-commerce')
 
 var bigC = new BigCommerce(config.api.username, config.api.key, config.api.url);
 
-bigC.getOrderStatuses()
-.pipe(JSONStream.parse())
-.pipe(printer, {end: false})
-
-bigC.getOrderStatus(1)
-.pipe(JSONStream.parse())
-.pipe(printer, {end: false})
+//bigC.getOrderStatuses()
+//.pipe(JSONStream.parse())
+//.pipe(printer, {end: false})
+//
+//bigC.getOrderStatus(1)
+//.pipe(JSONStream.parse())
+//.pipe(printer, {end: false})
 
 //bigC.getCategories()
 //.pipe(JSONStream.parse())
@@ -30,7 +30,7 @@ bigC.getOrderStatus(1)
 //bigC.getBrands()
 //.pipe(JSONStream.parse())
 //.pipe(printer, {end: false})
-//
+
 //bigC.getBrand(34)
 //.pipe(JSONStream.parse())
 //.pipe(printer, {end: false})
@@ -43,10 +43,11 @@ bigC.getOrderStatus(1)
 //.pipe(JSONStream.parse())
 //.pipe(printer, {end: false})
 //
-//bigC.getProducts({limit: 1})
+
+//bigC.getProducts()
 //.pipe(JSONStream.parse())
 //.pipe(printer, {end: false})
-//
+
 //bigC.getProduct(32)
 //.pipe(JSONStream.parse())
 //.pipe(printer, {end: false})
