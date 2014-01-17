@@ -116,7 +116,6 @@ BigCommerce.prototype.get = function (resourcePath, cb) {
     { url: resourcePath }
   );
   return request(options, function (err, res, result) {
-    console.log(err, result);
     return cb(err, result); 
   });
 };
