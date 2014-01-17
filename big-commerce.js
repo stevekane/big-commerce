@@ -20,6 +20,7 @@ var buildBaseOptions = function (bigC, urlSuffix) {
       pass: bigC.pass,
       sendImmediately: true       
     },
+    json: true,
     headers: {
       "Content-type": "application/json",
     },
@@ -33,18 +34,24 @@ var getMultiple = function (type, qs, cb) {
     buildBaseOptions(this, type),
     { qs: qs }
   );
-  return request(options, cb);
+  return request(options, function (err, res, result) {
+    return cb(err, result); 
+  });
 };
 
 //generic get single function
 var getSingle = function (type, id, cb) {
   var options = buildBaseOptions(this, type + "/" + String(id));
-  return request(options, cb);
+  return request(options, function (err, res, result) {
+    return cb(err, result); 
+  });
 };
 
 var getCount = function (type, cb) {
   var options = buildBaseOptions(this, type + "/" + "count");
-  return request(options, cb);
+  return request(options, function (err, res, result) {
+    return cb(err, result); 
+  });
 };
 
 //generic create function
@@ -53,7 +60,9 @@ var create = function (type, attributes, cb) {
     buildBaseOptions(this, type), 
     { body: JSON.stringify(attributes) }
   );
-  return request.post(options, cb);
+  return request(options, function (err, res, result) {
+    return cb(err, result); 
+  });
 };
 
 //generic update function
@@ -62,19 +71,25 @@ var update = function (type, id, attributes, cb) {
     buildBaseOptions(this, type + "/" + String(id)), 
     { body: JSON.stringify(attributes) }
   );
-  return request.put(options, cb);
+  return request(options, function (err, res, result) {
+    return cb(err, result); 
+  });
 };
 
 //generic delete multiple function
 var deleteMultiple = function (type, cb) {
   var options = buildBaseOptions(this, type);
-  return request.delete(options, cb);
+  return request(options, function (err, res, result) {
+    return cb(err, result); 
+  });
 };
 
 //generic delete single function
 var deleteSingle = function (type, id, cb) {
   var options = buildBaseOptions(this, type + "/" + String(id));
-  return request.delete(options, cb);
+  return request(options, function (err, res, result) {
+    return cb(err, result); 
+  });
 };
 
 /*
@@ -87,7 +102,23 @@ BigCommerce.prototype.getProductsBySKU = function (sku, cb) {
     buildBaseOptions(this, "products"),
     { qs: {sku: sku} }
   );
-  return request(options, cb);
+  return request(options, function (err, res, result) {
+    return cb(err, result); 
+  });
+};
+
+/*
+ * Used when you already have a url path to a resource
+ */
+BigCommerce.prototype.get = function (resourcePath, cb) {
+  var options = extend(
+    buildBaseOptions(this), 
+    { url: resourcePath }
+  );
+  return request(options, function (err, res, result) {
+    console.log(err, result);
+    return cb(err, result); 
+  });
 };
 
 extend(BigCommerce.prototype, {
