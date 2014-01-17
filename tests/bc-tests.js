@@ -1,7 +1,8 @@
 var path = require('path')
-  , BigCommerce = require('../big-commerce')
   , async = require('async')
   , _ = require('lodash')
+  , BigCommerce = require('../big-commerce')
+  , flipMap = require('../utils').flipMap
   , config = require('../config.json')
   , compose = _.compose
   , partial = _.partial
@@ -12,35 +13,44 @@ var path = require('path')
   , clone = _.clone
   , bind = _.bind
   , bigC = new BigCommerce(config.api.username, config.api.key, config.api.url)
-  , get = bind(bigC.get, bigC)
-  , getCategory = bind(bigC.getCategory, bigC)
-  , getOptionValues = bind(bigC.getOptionValues, bigC)
-  , buildPath = partial(path.join, config.api.url, "product_images/");
+
+//helper functions used in compositions
+var get = bind(bigC.get, bigC);
+var getCategory = bind(bigC.getCategory, bigC);
+var getOptionValues = bind(bigC.getOptionValues, bigC);
+var buildPath = partial(path.join, config.api.url, "product_images/");
 
 //transform product attribute according to groupon's schema
 var transformProduct = function (product) {
   return {};
 };
 
-//fetch the values for an option and return a new optionWithValues object
-var buildOptionWithValues = function (option, cb) {
+//get values for this option then returned composite object
+var getOptionWithValues = function (option, cb) {
   getOptionValues(option.option_id, function (err, values) {
-    var optionWithValues = extend(clone(option), {
-      values: values 
-    }); 
-    return cb(err, optionWithValues);
+    return cb(err, extend(clone(option), {values: values}));
+  });
+};
+
+//given a url, build a complete options object with values
+var getOptionsWithValues = function (url, cb) {
+
+  get(url, function (err, options) {
+    if (err) return cb(err, options);
+
+    async.map(options, getOptionWithValues, function (err, optionsWithValues) {
+      return cb(err, optionsWithValues);
+    });
   });
 };
 
 //format an image_file by building a full url path
 var formatImage = function (image_file) {
-  if (!image_file) return undefined;
   return buildPath(image_file);
 };
 
 //format the brand object returned by BigCommerce for groupon's api
 var formatBrand = function (brand) {
-  if (!brand) return undefined;
   return {
     name: brand.name ? brand.name : undefined,
     keywords: brand.meta_keywords ? brand.meta_keywords : undefined,
@@ -49,17 +59,15 @@ var formatBrand = function (brand) {
 };
 
 //format options 
+//TODO: IMPLEMENT THIS.  we want all permutations zipped together
 var formatOptions = function (options) {
-  if (!options) return undefined;
-  return options;
-  //return {
-  //   
-  //}; 
+  var allPermutations = [];
+  console.log(pluck(options, "values"));
+  return [];
 };
 
 //format images returned by BigCommerce for groupon's api
 var formatImages = function (images) {
-  if (!images) return undefined;
   return map(images, compose(formatImage, property("image_file")));
 };
 
@@ -70,25 +78,13 @@ options returns options which in turn contain values that we must
 fetch in subsequent requests
 */ 
 var buildFullProduct = function (product, cb) {
-  var transformed = transformProduct(product);
-  
-  var getBrand = partial(get, product.brand.url);
-  var getImages = partial(get, product.images.url);
-  var getCategories = partial(async.map, product.categories, getCategory);
-  var getOptions = function (cb) {
-    get(product.options.url, function (err, options) {
-      async.map(options, buildOptionWithValues, function (err, optionsWithValues) {
-        cb(err, optionsWithValues); 
-      });
-    }); 
-  };
-
   async.parallel({
-    brand: getBrand,
-    images: getImages,
-    categories: getCategories,
-    options: getOptions
+    brand: partial(get, product.brand.url),
+    images: partial(get, product.images.url),
+    categories: partial(async.map, product.categories, getCategory),
+    options: partial(getOptionsWithValues, product.options.url)
   }, function (err, productDetails) {
+    var transformed = transformProduct(product);
     var formatted = {
       brand: formatBrand(productDetails.brand),
       images: formatImages(productDetails.images),
@@ -105,9 +101,9 @@ var buildFullProduct = function (product, cb) {
 //  });
 //});
 
-bigC.getProduct(33, function (err, product) {
+bigC.getProduct(37, function (err, product) {
   buildFullProduct(product, function (err, fullProduct) {
-    console.error(err); 
-    console.log(fullProduct); 
+    //console.error(err); 
+    //console.log(fullProduct); 
   });
 });
