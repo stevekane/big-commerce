@@ -47,6 +47,13 @@ var getSingle = function (type, id, cb) {
   });
 };
 
+var getSingleWithSuffix = function (type, suffix, id, cb) {
+  var options = buildBaseOptions(this, type + "/" + String(id) + "/" + suffix);
+  return request(options, function (err, res, result) {
+    return cb(err, result); 
+  });
+};
+
 var getCount = function (type, cb) {
   var options = buildBaseOptions(this, type + "/" + "count");
   return request(options, function (err, res, result) {
@@ -128,6 +135,17 @@ extend(BigCommerce.prototype, {
   updateProduct: partial(update, "products"),
   deleteProducts: partial(deleteMultiple, "products"),
   deleteProduct: partial(deleteSingle, "products"),
+
+  getOptions: partial(getMultiple, "options"),
+  getOption: partial(getSingle, "options"),
+  getOptionCount: partial(getCount, "options"),
+  createOption: partial(create, "options"),
+  updateOption: partial(update, "options"),
+  deleteOptions: partial(deleteMultiple, "options"),
+  deleteOption: partial(deleteSingle, "options"),
+
+  //TODO: need to add all suffixy endpoints here and elsewhere
+  getOptionValues: partial(getSingleWithSuffix, "options", "values"),
 
   getCoupons: partial(getMultiple, "coupons"),
   getCoupon: partial(getSingle, "coupons"),
