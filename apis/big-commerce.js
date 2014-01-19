@@ -29,9 +29,9 @@ var buildBaseOptions = function (bigC, urlSuffix) {
 };
 
 //generic get multiple function
-var getMultiple = function (type, qs, cb) {
+var getMultiple = function (type, bigC, qs, cb) {
   var options = extend(
-    buildBaseOptions(this, type),
+    buildBaseOptions(bigC, type),
     { qs: qs }
   );
   return request(options, function (err, res, result) {
@@ -40,31 +40,31 @@ var getMultiple = function (type, qs, cb) {
 };
 
 //generic get single function
-var getSingle = function (type, id, cb) {
-  var options = buildBaseOptions(this, type + "/" + String(id));
+var getSingle = function (type, bigC, id, cb) {
+  var options = buildBaseOptions(bigC, type + "/" + String(id));
   return request(options, function (err, res, result) {
     return cb(err, result); 
   });
 };
 
-var getSingleWithSuffix = function (type, suffix, id, cb) {
-  var options = buildBaseOptions(this, type + "/" + String(id) + "/" + suffix);
+var getSingleWithSuffix = function (type, suffix, bigC, id, cb) {
+  var options = buildBaseOptions(bigC, type + "/" + String(id) + "/" + suffix);
   return request(options, function (err, res, result) {
     return cb(err, result); 
   });
 };
 
-var getCount = function (type, cb) {
-  var options = buildBaseOptions(this, type + "/" + "count");
+var getCount = function (type, bigC, cb) {
+  var options = buildBaseOptions(bigC, type + "/" + "count");
   return request(options, function (err, res, result) {
     return cb(err, result); 
   });
 };
 
 //generic create function
-var create = function (type, attributes, cb) {
+var create = function (type, bigC, attributes, cb) {
   var options = extend(
-    buildBaseOptions(this, type), 
+    buildBaseOptions(bigC, type), 
     { body: JSON.stringify(attributes) }
   );
   return request(options, function (err, res, result) {
@@ -73,9 +73,9 @@ var create = function (type, attributes, cb) {
 };
 
 //generic update function
-var update = function (type, id, attributes, cb) {
+var update = function (type, bigC, id, attributes, cb) {
   var options = extend(
-    buildBaseOptions(this, type + "/" + String(id)), 
+    buildBaseOptions(bigC, type + "/" + String(id)), 
     { body: JSON.stringify(attributes) }
   );
   return request(options, function (err, res, result) {
@@ -84,16 +84,16 @@ var update = function (type, id, attributes, cb) {
 };
 
 //generic delete multiple function
-var deleteMultiple = function (type, cb) {
-  var options = buildBaseOptions(this, type);
+var deleteMultiple = function (type, bigC, cb) {
+  var options = buildBaseOptions(bigC, type);
   return request(options, function (err, res, result) {
     return cb(err, result); 
   });
 };
 
 //generic delete single function
-var deleteSingle = function (type, id, cb) {
-  var options = buildBaseOptions(this, type + "/" + String(id));
+var deleteSingle = function (type, bigC, id, cb) {
+  var options = buildBaseOptions(bigC, type + "/" + String(id));
   return request(options, function (err, res, result) {
     return cb(err, result); 
   });
@@ -104,9 +104,9 @@ var deleteSingle = function (type, id, cb) {
  * TODO: In the future, this could be expanded to allow for returns of 
  * options SKUs as well as top level (see their API docs)
 */
-BigCommerce.prototype.getProductsBySKU = function (sku, cb) {
+BigCommerce.prototype.getProductsBySKU = function (bigC, sku, cb) {
   var options = extend(
-    buildBaseOptions(this, "products"),
+    buildBaseOptions(bigC, "products"),
     { qs: {sku: sku} }
   );
   return request(options, function (err, res, result) {
@@ -117,9 +117,9 @@ BigCommerce.prototype.getProductsBySKU = function (sku, cb) {
 /*
  * Used when you already have a url path to a resource
  */
-BigCommerce.prototype.get = function (resourcePath, cb) {
+BigCommerce.prototype.get = function (bigC, resourcePath, cb) {
   var options = extend(
-    buildBaseOptions(this), 
+    buildBaseOptions(bigC), 
     { url: resourcePath }
   );
   return request(options, function (err, res, result) {

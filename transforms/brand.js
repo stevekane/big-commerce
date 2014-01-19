@@ -8,7 +8,7 @@ var formatBrand = function (brand) {
   return {
     name: brand.name ? brand.name : undefined,
     uuid: "bigc-brand-" + brand.id,
-    image: buildPath(brand.image_file)
+    image: brand.image_file ? buildPath(brand.image_file) : undefined
   }
 };
 

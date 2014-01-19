@@ -2,7 +2,7 @@
   "name": "big-commerce",
   "version": "0.0.1",
   "description": "Test application for interacting w/ the Big Commerce API",
-  "main": "big-commerce.js",
+  "main": "server.js",
   "scripts": {
     "test": "node tests"
   },
@@ -26,6 +26,7 @@
     "request": "~2.30.0",
     "through": "~2.3.4",
     "lodash": "~2.4.1",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "express": "~3.4.8"
   }
 }
