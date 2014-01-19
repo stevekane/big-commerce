@@ -1,9 +1,11 @@
-var async = require('async')
+var path = require('path')
+  , async = require('async')
   , _ = require('lodash')
+  , config = require('./config.json')
   , extend = _.extend
+  , partial = _.partial
   , clone = _.clone
   , map = _.map
-  , flatten = _.flatten
 
 //here with flip the arguments to async.map so that it's composable...shameful
 var flipMap = function (fn, list, cb) {
@@ -36,8 +38,12 @@ var allCombinations = function (listOfArrays) {
 var removeSlashes = function (str) {
   return str.replace(/\//g, "");
 };
+
+var buildPath = partial(path.join, config.api.url, "product_images/");
+
 module.exports = {
   flipMap: flipMap,
   allCombinations: allCombinations,
-  removeSlashes: removeSlashes
+  removeSlashes: removeSlashes,
+  buildPath: buildPath
 };
