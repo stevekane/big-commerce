@@ -2,7 +2,8 @@ var path = require('path')
   , async = require('async')
   , _ = require('lodash')
   , BigCommerce = require('../big-commerce')
-  , flipMap = require('../utils').flipMap
+  , allCombinations = require('../utils').allCombinations
+  , removeSlashes = require('../utils').removeSlashes
   , config = require('../config.json')
   , compose = _.compose
   , partial = _.partial
@@ -21,8 +22,13 @@ var getOptionValues = bind(bigC.getOptionValues, bigC);
 var buildPath = partial(path.join, config.api.url, "product_images/");
 
 //transform product attribute according to groupon's schema
-var transformProduct = function (product) {
-  return {};
+var formatProduct = function (product) {
+  console.log(product);
+  return {
+    title: product.name,
+    uuid: "bigc-product-"+product.id,
+    slug: removeSlashes(product.custom_url)
+  };
 };
 
 //get values for this option then returned composite object
@@ -34,7 +40,6 @@ var getOptionWithValues = function (option, cb) {
 
 //given a url, build a complete options object with values
 var getOptionsWithValues = function (url, cb) {
-
   get(url, function (err, options) {
     if (err) return cb(err, options);
 
@@ -44,26 +49,55 @@ var getOptionsWithValues = function (url, cb) {
   });
 };
 
-//format an image_file by building a full url path
-var formatImage = function (image_file) {
-  return buildPath(image_file);
-};
-
 //format the brand object returned by BigCommerce for groupon's api
 var formatBrand = function (brand) {
   return {
     name: brand.name ? brand.name : undefined,
-    keywords: brand.meta_keywords ? brand.meta_keywords : undefined,
+    uuid: "bigc-brand-"+brand.id,
     image: formatImage(brand.image_file)
   }
 };
 
-//format options 
-//TODO: IMPLEMENT THIS.  we want all permutations zipped together
-var formatOptions = function (options) {
-  var allPermutations = [];
-  console.log(pluck(options, "values"));
-  return [];
+//produce a trait for a given value and option
+var createTrait = function (option, value) {
+  return {
+    name: option.display_name,
+    value: value.label
+  };
+};
+
+//expand our option into a list of trait permutations with price and name data
+var transformToTrait = function (product, option) {
+   return map(option.values, partial(createTrait, option));
+};
+
+//add product data like price and eventually images to each traitCombo
+var addProductData = function (product, traitCombo) {
+  return {
+    price_amount: product.price,
+    value_amount: product.sale_price,  
+    traits: traitCombo
+  };
+};
+
+/* 
+ * BigCommerce's api has a different notion of options
+ * an option for them is a "type" e.g. Color or Size
+ * and it can have multiple values e.g. "XL" or "Red"
+ * Groupon's system appears to need all permutations
+ * of option combinations and also additional data such as
+ * price, discount, availability etc 
+ */
+var formatOptions = function (product, options) {
+  var traits = map(options, partial(transformToTrait, product))
+    , traitCombinations = allCombinations(traits);
+
+  return map(traitCombinations, partial(addProductData, product));
+};
+
+//format an image_file by building a full url path
+var formatImage = function (image_file) {
+  return buildPath(image_file);
 };
 
 //format images returned by BigCommerce for groupon's api
@@ -71,7 +105,14 @@ var formatImages = function (images) {
   return map(images, compose(formatImage, property("image_file")));
 };
 
+//format categories returned by BigCommerce for groupon's api
+var formatCategories = function (categories) {
+  return pluck(categories, "name");
+};
+
 /*
+TODO: Eventually, we'll need to associate the options with images. 
+
 each function takes a cb which async provides
 categories is an array of ids.  must get each in seperate request
 options returns options which in turn contain values that we must
@@ -84,14 +125,13 @@ var buildFullProduct = function (product, cb) {
     categories: partial(async.map, product.categories, getCategory),
     options: partial(getOptionsWithValues, product.options.url)
   }, function (err, productDetails) {
-    var transformed = transformProduct(product);
-    var formatted = {
+    var transformed = extend(formatProduct(product), {
       brand: formatBrand(productDetails.brand),
       images: formatImages(productDetails.images),
-      categories: {},
-      options: formatOptions(productDetails.options)
-    };
-    return cb(err, extend(transformed, formatted));
+      categories: formatCategories(productDetails.categories),
+      options: formatOptions(product, productDetails.options)
+    });
+    return cb(err, transformed);
   });
 };
 
@@ -103,7 +143,7 @@ var buildFullProduct = function (product, cb) {
 
 bigC.getProduct(37, function (err, product) {
   buildFullProduct(product, function (err, fullProduct) {
-    //console.error(err); 
-    //console.log(fullProduct); 
+    console.error(err); 
+    console.log(fullProduct); 
   });
 });

@@ -1,4 +1,4 @@
-var allCombinations = require('./utils').allCombinations
+var allCombinations = require('../utils').allCombinations
   , ar1 = [
     {name: "alfons"},
     {name: "bruno"},
