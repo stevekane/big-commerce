@@ -1,6 +1,10 @@
 var test = require('tape')
   , _ = require('lodash')
   , isEqual = _.isEqual
+  , map = _.map
+  , partial = _.partial
+  , forEach = _.forEach
+  , find = _.find
   , allCombinations = require('../utils').allCombinations
 
 var ar1 = [
@@ -19,7 +23,7 @@ var arOfArs = [ar1, ar2, ar3];
 
 test("it returns an array of all permutations of the input arrays", function (t) {
   t.plan(8);
-  var expectedPermutations = [
+  var expectedPerms = [
     [{name: "alfons"}, {title: "lord"}, {position: "pawn"}], 
     [{name: "alfons"}, {title: "wanker"}, {position: "pawn"}], 
     [{name: "bruno"}, {title: "lord"}, {position: "pawn"}], 
@@ -27,10 +31,12 @@ test("it returns an array of all permutations of the input arrays", function (t)
     [{name: "alfons"}, {title: "lord"}, {position: "knight"}], 
     [{name: "alfons"}, {title: "wanker"}, {position: "knight"}], 
     [{name: "bruno"}, {title: "lord"}, {position: "knight"}], 
-    [{name: "bruno"}, {title: "wanker"}, {position: "knight"}], 
+    [{name: "bruno"}, {title: "wanker"}, {position: "knight"}]
   ];
   var permutations = allCombinations(arOfArs);
-  for (var i = 0; i < expectedPermutations.length; i++) {
-    t.true(expectedPermutations[i], permutations[i]); 
-  }
+
+  forEach(expectedPerms, function (expected) {
+    var matchingVal = find(permutations, partial(isEqual, expected));
+    t.ok(isEqual(matchingVal, expected), "found matching value");
+  });
 });
