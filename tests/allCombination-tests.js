@@ -40,3 +40,17 @@ test("it returns an array of all permutations of the input arrays", function (t)
     t.ok(isEqual(matchingVal, expected), "found matching value");
   });
 });
+
+test("it should return an empty array if nothing provided", function (t) {
+  t.plan(1);
+  var expected = [];
+  var permutations = allCombinations();
+  t.ok(isEqual(expected, permutations), "returns an empty array if nothingprovided");
+});
+
+test("it should return an empty array if empty arrays provided", function (t) {
+  t.plan(1);
+  var expected = [];
+  var permutations = allCombinations([[], [], []]);
+  t.ok(isEqual(expected, permutations), "returns an empty array for empty arrays");
+});

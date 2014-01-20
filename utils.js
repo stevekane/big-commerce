@@ -15,7 +15,8 @@ var flipMap = function (fn, list, cb) {
 //takes an array of arrays of objects and returns a single array of 
 //all possible combinations of each arrays objects....ya.
 var allCombinations = function (listOfArrays) {
-  var res = [];
+  var res = []
+    , listOfArrays = listOfArrays || [];
 
   map(listOfArrays[0], function inner (i, val) {
     var iter = i
