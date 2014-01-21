@@ -5,7 +5,7 @@ var test = require('tape')
   , partial = _.partial
   , forEach = _.forEach
   , find = _.find
-  , allCombinations = require('../utils').allCombinations
+  , calculatePermutationsAsArrays = require('../utils').calculatePermutationsAsArrays
 
 var ar1 = [
   {name: "alfons"},
@@ -33,7 +33,7 @@ test("it returns an array of all permutations of the input arrays", function (t)
     [{name: "bruno"}, {title: "lord"}, {position: "knight"}], 
     [{name: "bruno"}, {title: "wanker"}, {position: "knight"}]
   ];
-  var permutations = allCombinations(arOfArs);
+  var permutations = calculatePermutationsAsArrays(arOfArs);
 
   forEach(expectedPerms, function (expected) {
     var matchingVal = find(permutations, partial(isEqual, expected));
@@ -44,13 +44,13 @@ test("it returns an array of all permutations of the input arrays", function (t)
 test("it should return an empty array if nothing provided", function (t) {
   t.plan(1);
   var expected = [];
-  var permutations = allCombinations();
+  var permutations = calculatePermutationsAsArrays();
   t.ok(isEqual(expected, permutations), "returns an empty array if nothingprovided");
 });
 
 test("it should return an empty array if empty arrays provided", function (t) {
   t.plan(1);
   var expected = [];
-  var permutations = allCombinations([[], [], []]);
+  var permutations = calculatePermutationsAsArrays([[], [], []]);
   t.ok(isEqual(expected, permutations), "returns an empty array for empty arrays");
 });

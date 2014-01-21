@@ -1,7 +1,7 @@
 var _ = require('lodash')
   , map = _.map
   , partial = _.partial
-  , allCombinations = require('../utils').allCombinations
+  , calculatePermutationsAsArrays = require('../utils').calculatePermutationsAsArrays
 
 /* 
  * BigCommerce's api has a different notion of options
@@ -36,7 +36,7 @@ var addProductData = function (product, traitCombo) {
 
 var formatOptions = function (product, options) {
   var traits = map(options, partial(transformToTrait, product))
-    , traitCombinations = allCombinations(traits);
+    , traitCombinations = calculatePermutationsAsArrays(traits);
 
   return map(traitCombinations, partial(addProductData, product));
 };
