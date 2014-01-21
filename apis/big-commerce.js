@@ -20,7 +20,7 @@ var fetch = function (options, cb) {
  */
 var buildBaseOptions = function (bigC, urlSuffix) {
   return {
-    url: bigC.storeURL + urlSuffix + ".json",
+    url: bigC.apiURL + urlSuffix + ".json",
     auth: {
       user: bigC.user,
       pass: bigC.pass,

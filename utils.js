@@ -1,9 +1,6 @@
 var path = require('path')
   , async = require('async')
   , _ = require('lodash')
-  , config = require('./config.json')
-  , partial = _.partial
-  , map = _.map
 
 //here with flip the arguments to async.map so that it's composable...shameful
 var flipMap = function (fn, list, cb) {
@@ -14,10 +11,16 @@ var removeSlashes = function (str) {
   return str.replace(/\//g, "");
 };
 
-var buildPath = partial(path.join, config.store.url, "product_images/");
+var buildImageUrl = function (bigC, slug) {
+  return path.join(bigC.storeURL, "product_images", slug);
+};
+var buildUrl = function (bigC, slug) {
+  return path.join(bigC.storeURL, slug);
+};
 
 module.exports = {
   flipMap: flipMap,
   removeSlashes: removeSlashes,
-  buildPath: buildPath
+  buildImageUrl: buildImageUrl,
+  buildUrl: buildUrl
 };

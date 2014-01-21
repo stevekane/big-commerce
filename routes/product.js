@@ -76,11 +76,11 @@ var buildFullProduct = function (bigC, product, cb) {
     options: partial(getOptionsWithValues, bigC, product.options.url)
   }, function (err, productDetails) {
     if (err) return cb(err, null);
-    var transformed = extend(formatProduct(product), {
-      brand: formatBrand(productDetails.brand),
-      images: formatImages(productDetails.images),
-      categories: formatCategories(productDetails.categories),
-      options: formatOptions(product, productDetails.options)
+    var transformed = extend(formatProduct(bigC, product), {
+      brand: formatBrand(bigC, productDetails.brand),
+      images: formatImages(bigC, productDetails.images),
+      categories: formatCategories(bigC, productDetails.categories),
+      options: formatOptions(bigC, product, productDetails.options)
     });
     return cb(err, transformed);
   });

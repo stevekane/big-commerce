@@ -36,7 +36,7 @@ var addProductData = function (product, traitCombo) {
   };
 };
 
-var formatOptions = function (product, options) {
+var formatOptions = function (bigC, product, options) {
   if (!options) return [];
   var traits = map(options, partial(transformToTrait, product))
     , traitCombinations = calculatePermutationsAsArrays(traits);

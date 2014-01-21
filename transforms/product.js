@@ -1,10 +1,12 @@
-var removeSlashes = require('../utils').removeSlashes;
+var removeSlashes = require('../utils').removeSlashes
+  , buildUrl = require('../utils').buildUrl
 
 //transform product attribute according to groupon's schema
-var formatProduct = function (product) {
+var formatProduct = function (bigC, product) {
   return {
     title: product.name,
-    uuid: "bigc-product-"+product.id,
+    deal_url: buildUrl(bigC, product.custom_url),
+    uuid: "bigc-product-" + product.id,
     slug: removeSlashes(product.custom_url)
   };
 };

@@ -15,7 +15,8 @@ var path = require('path')
 var bigC = new BigCommerce({
   user: config.api.username,
   pass: config.api.key,
-  storeURL: config.api.url,
+  apiURL: config.api.url,
+  storeURL: config.store.url,
   cache: {},
   debug: true
 });
