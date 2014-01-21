@@ -5,7 +5,8 @@ var path = require('path')
 
 //format the brand object returned by BigCommerce for groupon's api
 var formatBrand = function (brand) {
-  return {
+  if (!brand) return {};
+  else return {
     name: brand.name ? brand.name : undefined,
     uuid: "bigc-brand-" + brand.id,
     image: brand.image_file ? buildPath(brand.image_file) : undefined

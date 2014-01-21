@@ -7,6 +7,7 @@ var path = require('path')
 
 //format images returned by BigCommerce for groupon's api
 var formatImages = function (images) {
+  if (!images) return [];
   return map(images, compose(buildPath, property("image_file")));
 };
 

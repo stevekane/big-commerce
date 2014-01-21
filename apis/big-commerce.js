@@ -2,10 +2,16 @@ var request = require('request')
   , extend = require('lodash').extend
   , partial = require('lodash').partial
 
-var BigCommerce = function (user, pass, storeURL) {
-  this.user = user;
-  this.pass = pass;
-  this.storeURL = storeURL;
+var BigCommerce = function (options) {
+  extend(this, options);
+};
+
+//once options are configured, fire off our request w/ request
+var fetch = function (options, cb) {
+  return request(options, function (err, res, result) {
+    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
+    else return cb(err, result); 
+  });
 };
 
 /**
@@ -21,6 +27,7 @@ var buildBaseOptions = function (bigC, urlSuffix) {
       sendImmediately: true       
     },
     json: true,
+    timeout: 5000,
     headers: {
       "Content-type": "application/json",
     },
@@ -34,35 +41,27 @@ var getMultiple = function (type, bigC, qs, cb) {
     buildBaseOptions(bigC, type),
     { qs: qs }
   );
-  return request(options, function (err, res, result) {
-    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
-    else return cb(err, result); 
-  });
+  if (bigC.debug) console.log("Sending request to", options.url);
+  return fetch(options, cb);
 };
 
 //generic get single function
 var getSingle = function (type, bigC, id, cb) {
   var options = buildBaseOptions(bigC, type + "/" + String(id));
-  return request(options, function (err, res, result) {
-    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
-    else return cb(err, result); 
-  });
+  if (bigC.debug) console.log("sending request to", options.url);
+  return fetch(options, cb);
 };
 
 var getSingleWithSuffix = function (type, suffix, bigC, id, cb) {
   var options = buildBaseOptions(bigC, type + "/" + String(id) + "/" + suffix);
-  return request(options, function (err, res, result) {
-    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
-    else return cb(err, result); 
-  });
+  if (bigC.debug) console.log("sending request to", options.url);
+  return fetch(options, cb);
 };
 
 var getCount = function (type, bigC, cb) {
   var options = buildBaseOptions(bigC, type + "/" + "count");
-  return request(options, function (err, res, result) {
-    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
-    else return cb(err, result); 
-  });
+  if (bigC.debug) console.log("sending request to", options.url);
+  return fetch(options, cb);
 };
 
 //generic create function
@@ -71,10 +70,8 @@ var create = function (type, bigC, attributes, cb) {
     buildBaseOptions(bigC, type), 
     { body: JSON.stringify(attributes) }
   );
-  return request(options, function (err, res, result) {
-    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
-    else return cb(err, result); 
-  });
+  if (bigC.debug) console.log("Sending request to", options.url);
+  return fetch(options, cb);
 };
 
 //generic update function
@@ -83,28 +80,22 @@ var update = function (type, bigC, id, attributes, cb) {
     buildBaseOptions(bigC, type + "/" + String(id)), 
     { body: JSON.stringify(attributes) }
   );
-  return request(options, function (err, res, result) {
-    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
-    else return cb(err, result); 
-  });
+  if (bigC.debug) console.log("Sending request to", options.url);
+  return fetch(options, cb);
 };
 
 //generic delete multiple function
 var deleteMultiple = function (type, bigC, cb) {
   var options = buildBaseOptions(bigC, type);
-  return request(options, function (err, res, result) {
-    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
-    else return cb(err, result); 
-  });
+  if (bigC.debug) console.log("Sending request to", options.url);
+  return fetch(options, cb);
 };
 
 //generic delete single function
 var deleteSingle = function (type, bigC, id, cb) {
   var options = buildBaseOptions(bigC, type + "/" + String(id));
-  return request(options, function (err, res, result) {
-    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
-    else return cb(err, result); 
-  });
+  if (bigC.debug) console.log("Sending request to", options.url);
+  return fetch(options, cb);
 };
 
 /*
@@ -117,10 +108,8 @@ BigCommerce.prototype.getProductsBySKU = function (bigC, sku, cb) {
     buildBaseOptions(bigC, "products"),
     { qs: {sku: sku} }
   );
-  return request(options, function (err, res, result) {
-    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
-    else return cb(err, result); 
-  });
+  if (bigC.debug) console.log("Sending request to", options.url);
+  return fetch(options, cb);
 };
 
 /*
@@ -131,10 +120,8 @@ BigCommerce.prototype.get = function (bigC, resourcePath, cb) {
     buildBaseOptions(bigC), 
     { url: resourcePath }
   );
-  return request(options, function (err, res, result) {
-    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
-    else return cb(err, result); 
-  });
+  if (bigC.debug) console.log("Sending request to", options.url);
+  return fetch(options, cb);
 };
 
 extend(BigCommerce.prototype, {

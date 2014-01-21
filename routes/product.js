@@ -9,14 +9,6 @@ var async = require('async')
   , extend = _.extend
   , clone = _.clone
 
-/*
-TODO: Eventually, we'll need to associate the options with images. 
-
-each function takes a cb which async provides
-categories is an array of ids.  must get each in seperate request
-options returns options which in turn contain values that we must
-fetch in subsequent requests
-*/ 
 var buildFullProduct = function (bigC, product, cb) {
   var get = partial(bigC.get, bigC)
     , getCategory = partial(bigC.getCategory, bigC)
@@ -25,6 +17,7 @@ var buildFullProduct = function (bigC, product, cb) {
   //get values for this option then returned composite object
   var getOptionWithValues = function (option, cb) {
     getOptionValues(option.option_id, function (err, values) {
+      var values = values || [];
       return cb(err, extend(clone(option), {values: values}));
     });
   };
@@ -32,6 +25,7 @@ var buildFullProduct = function (bigC, product, cb) {
   //given a url, build a complete options object with values
   var getOptionsWithValues = function (url, cb) {
     get(url, function (err, options) {
+      var options = options || [];
       if (err) return cb(err, options);
       else return async.map(options, getOptionWithValues, cb);
     });
@@ -53,13 +47,23 @@ var buildFullProduct = function (bigC, product, cb) {
   });
 };
 
-//TODO: Should improve the bigC interface to return an error if no resouce
-//is found AKA status is 404
-var fetchProduct = function (bigC, id, cb) {
+var getProduct = function (bigC, id, cb) {
   bigC.getProduct(bigC, id, function (err, product) {
     if (err) return cb(err, null);
     else return buildFullProduct(bigC, product, cb);
   });
 };
 
-module.exports = fetchProduct;
+var getProducts = function (bigC, cb) {
+  var query = {limit: 10};
+
+  bigC.getProducts(bigC, query, function (err, products) {
+    if (err) return cb(err, null);
+    else return async.map(products, partial(buildFullProduct, bigC), cb);
+  });
+};
+
+module.exports = {
+  getProduct: getProduct,
+  getProducts: getProducts
+};

@@ -3,6 +3,7 @@ var _ = require('lodash')
 
 //format categories returned by BigCommerce for groupon's api
 var formatCategories = function (categories) {
+  if (!categories) return [];
   return pluck(categories, "name");
 };
 
