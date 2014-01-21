@@ -5,6 +5,7 @@ var express = require('express')
   , getProduct = require('./routes/product').getProduct
   , getProducts = require('./routes/product').getProducts
   , cacheOptions = require('./cache/options').cacheOptions
+  , cacheCategories = require('./cache/categories').cacheCategories
   , bigC = new BigCommerce(config.api.username, config.api.key, config.api.url)
   , app = express()
   , apiUri = "/api/v1"
@@ -27,6 +28,10 @@ by a web client or another groupon service
 //here we seed the cache with categories and option values
 cacheOptions(bigC, function (err, optionsWithValues) {
   console.log(bigC.cache.options, "Options are cached."); 
+});
+
+cacheCategories(bigC, function (err, categories) {
+  console.log(bigC.cache.categories, "Categories are cached."); 
 });
 
 
