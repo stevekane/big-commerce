@@ -5,10 +5,15 @@ var path = require('path')
   , partial = _.partial
   , config = require('./config.json')
   , BigCommerce = require('./apis/big-commerce')
+  , storesApi = require('./apis/stores')
   , getProduct = require('./routes/product').getProduct
   , getProducts = require('./routes/product').getProducts
   , cacheOptions = require('./cache/options').cacheOptions
   , cacheCategories = require('./cache/categories').cacheCategories
+  , createDeal = storesApi.createDeal
+  , createBrand = storesApi.createBrand
+  , addOptionToDeal = storesApi.addOptionToDeal
+  , addBrandToDeal = storesApi.addBrandToDeal
   , app = express()
 
 var bigC = new BigCommerce({
@@ -27,15 +32,25 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 app.get('/api/v1/products/:product_id', function (req, res) {
-  var id = req.params.product_id;
+  getProduct(bigC, req.params.product_id, function (err, product) {
 
-  if (id) {
-    return getProduct(bigC, id, function (err, product) {
-      return res.json(product);
+    async.parallel({
+      brand: partial(createBrand, product.brand),
+      deal: partial(createDeal, product)
+    }, function (err, results) {
+      if (err) return res.json(400, {err: err}); 
+
+      async.parallel({
+        options: function (cb) { 
+          async.map(product.options, partial(addOptionToDeal, results.deal.deal), cb)
+        },
+        brand: partial(addBrandToDeal, results.deal.deal, results.brand.brand)
+      }, function (err, updateData) {
+        if (err) return res.json(400, {err: err}); 
+        return res.json(200, product);
+      });   
     });
-  } else {
-    return res.send(404); 
-  }
+  });
 });
 
 app.get('/api/v1/products', function (req, res) {

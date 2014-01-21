@@ -36,8 +36,8 @@ var formatOptions = function (bigC, product, imageAlt, options) {
       //  name: trait.name,
       //  value: trait.value
       //},
-      price_amount: product.calculated_price,
-      value_amount: product.price,  
+      price_amount: product.calculated_price * 100,
+      value_amount: product.price * 100,  
       quantity_sold: product.total_sold,
       image_root_uri: imageAlt,
     }; 

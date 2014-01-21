@@ -6,5 +6,8 @@
   },
   "store": {
     "url": "https://store-1cpdp3.mybigcommerce.com/"   
+  },
+  "stores": {
+    "url": "http://localhost:3003/api/v1/"
   }
 }
