@@ -35,7 +35,8 @@ var getMultiple = function (type, bigC, qs, cb) {
     { qs: qs }
   );
   return request(options, function (err, res, result) {
-    return cb(err, result); 
+    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
+    else return cb(err, result); 
   });
 };
 
@@ -43,21 +44,24 @@ var getMultiple = function (type, bigC, qs, cb) {
 var getSingle = function (type, bigC, id, cb) {
   var options = buildBaseOptions(bigC, type + "/" + String(id));
   return request(options, function (err, res, result) {
-    return cb(err, result); 
+    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
+    else return cb(err, result); 
   });
 };
 
 var getSingleWithSuffix = function (type, suffix, bigC, id, cb) {
   var options = buildBaseOptions(bigC, type + "/" + String(id) + "/" + suffix);
   return request(options, function (err, res, result) {
-    return cb(err, result); 
+    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
+    else return cb(err, result); 
   });
 };
 
 var getCount = function (type, bigC, cb) {
   var options = buildBaseOptions(bigC, type + "/" + "count");
   return request(options, function (err, res, result) {
-    return cb(err, result); 
+    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
+    else return cb(err, result); 
   });
 };
 
@@ -68,7 +72,8 @@ var create = function (type, bigC, attributes, cb) {
     { body: JSON.stringify(attributes) }
   );
   return request(options, function (err, res, result) {
-    return cb(err, result); 
+    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
+    else return cb(err, result); 
   });
 };
 
@@ -79,7 +84,8 @@ var update = function (type, bigC, id, attributes, cb) {
     { body: JSON.stringify(attributes) }
   );
   return request(options, function (err, res, result) {
-    return cb(err, result); 
+    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
+    else return cb(err, result); 
   });
 };
 
@@ -87,7 +93,8 @@ var update = function (type, bigC, id, attributes, cb) {
 var deleteMultiple = function (type, bigC, cb) {
   var options = buildBaseOptions(bigC, type);
   return request(options, function (err, res, result) {
-    return cb(err, result); 
+    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
+    else return cb(err, result); 
   });
 };
 
@@ -95,7 +102,8 @@ var deleteMultiple = function (type, bigC, cb) {
 var deleteSingle = function (type, bigC, id, cb) {
   var options = buildBaseOptions(bigC, type + "/" + String(id));
   return request(options, function (err, res, result) {
-    return cb(err, result); 
+    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
+    else return cb(err, result); 
   });
 };
 
@@ -110,7 +118,8 @@ BigCommerce.prototype.getProductsBySKU = function (bigC, sku, cb) {
     { qs: {sku: sku} }
   );
   return request(options, function (err, res, result) {
-    return cb(err, result); 
+    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
+    else return cb(err, result); 
   });
 };
 
@@ -123,7 +132,8 @@ BigCommerce.prototype.get = function (bigC, resourcePath, cb) {
     { url: resourcePath }
   );
   return request(options, function (err, res, result) {
-    return cb(err, result); 
+    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
+    else return cb(err, result); 
   });
 };
 
