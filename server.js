@@ -35,7 +35,7 @@ var api = {
   delete: function (uri, cb) { return app.delete(path.join(apiUri, uri), cb) }
 };
 
-api.get('/products/:product_id/', function (req, res) {
+api.get('/products/:product_id', function (req, res) {
   var id = req.params.product_id;
 
   if (id) {
@@ -47,7 +47,7 @@ api.get('/products/:product_id/', function (req, res) {
   }
 });
 
-api.get('/products/', function (req, res) {
+api.get('/products', function (req, res) {
   return getProducts(bigC, function (err, products) {
     return res.json(products); 
   });
@@ -64,7 +64,5 @@ async.parallel({
   options: partial(cacheOptions, bigC),
   categories: partial(cacheCategories, bigC)
 }, function (err, results) {
-  console.log(results.options, "have been cached");
-  console.log(results.categories, "have been cached");
   app.listen(1234);
 });

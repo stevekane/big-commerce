@@ -6,7 +6,8 @@ var formatProduct = function (bigC, product) {
   return {
     title: product.name,
     deal_url: buildUrl(bigC, product.custom_url),
-    uuid: "bigc-product-" + product.id,
+    source_id: product.id,
+    source_type: "big-commerce",
     slug: removeSlashes(product.custom_url)
   };
 };
