@@ -9,7 +9,6 @@ var path = require('path')
   , getProducts = require('./routes/product').getProducts
   , cacheOptions = require('./cache/options').cacheOptions
   , cacheCategories = require('./cache/categories').cacheCategories
-  , bigC = new BigCommerce(config.api.username, config.api.key, config.api.url)
   , app = express()
   , apiUri = "/api/v1"
 
@@ -47,11 +46,6 @@ api.get('/products/:product_id/', function (req, res) {
   }
 });
 
-//FIXME: cannot fetch all as too many redundant requests causes timeouts
-//with the BigCommerce API.  can probably easily fix w/ caching
-//for commonly requested things such as option values and categories
-//current approach is pretty simplistic
-//TODO: for now, we throttle to {limit: 20} for demo purposes
 api.get('/products/', function (req, res) {
   return getProducts(bigC, function (err, products) {
     return res.json(products); 
@@ -69,10 +63,7 @@ async.parallel({
   options: partial(cacheOptions, bigC),
   categories: partial(cacheCategories, bigC)
 }, function (err, results) {
-  if (err) throw new Error("pre-caching failed");
-  else {
-    console.log(results.options, "have been cached");
-    console.log(results.categories, "have been cached");
-    app.listen(1234);
-  }
+  console.log(results.options, "have been cached");
+  console.log(results.categories, "have been cached");
+  app.listen(1234);
 });

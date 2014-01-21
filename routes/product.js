@@ -7,6 +7,7 @@ var async = require('async')
   , formatCategories = require('../transforms/categories')
   , find = _.find
   , partial = _.partial
+  , pluck = _.pluck
   , map = _.map
   , extend = _.extend
   , clone = _.clone
@@ -21,9 +22,11 @@ var async = require('async')
  * by the groupon Api.  
 * */
 
-//function to check a sub-cache for values
-var retrieveFromSubCache = function (subCache, value) {
-  return find(subCache, {id: value});
+//return list of found cached values based on id
+var getCachedById = function (cache, ids) {
+  return map(ids, function (id) {
+    return find(cache, {id: id}); 
+  });     
 };
 
 /*
@@ -32,7 +35,7 @@ which values we have cached and which we need to actually request.
 we will also add support to cache values retrieved in these calls if needed
 */
 var getCategories = function (bigC, categories, cb) {
-  var cached = map(categories, partial(retrieveFromSubCache, bigC.cache.categories));
+  var cached = getCachedById(bigC.cache.categories, categories);
   return cb(null, cached);
   //return async.map(categories, partial(bigC.getCategory, bigC), cb);
 };
@@ -41,17 +44,27 @@ var getCategories = function (bigC, categories, cb) {
 //get values for this option then returned composite object
 var getOptionWithValues = function (bigC, option, cb) {
   bigC.getOptionValues(bigC, option.option_id, function (err, values) {
+    if (err) return cb(err, values);
     var values = values || [];
+
     return cb(err, extend(clone(option), {values: values}));
   });
 };
 
+/*
+TODO: In the future, we'll make this more sophisticated and determine
+which values we have cached and which we need to actually request.
+we will also add support to cache values retrieved in these calls if needed
+*/
 //given a url, build a complete options object with values
 var getOptionsWithValues = function (bigC, url, cb) {
   bigC.get(bigC, url, function (err, options) {
-    var options = options || [];
     if (err) return cb(err, options);
-    else return async.map(options, partial(getOptionWithValues, bigC), cb);
+    var options = options || [];
+    var cached = getCachedById(bigC.cache.options, pluck(options, "option_id")); 
+
+    return cb(null, cached);
+    //return async.map(options, partial(getOptionWithValues, bigC), cb);
   });
 };
 
@@ -62,6 +75,7 @@ var buildFullProduct = function (bigC, product, cb) {
     categories: partial(getCategories, bigC, product.categories),
     options: partial(getOptionsWithValues, bigC, product.options.url)
   }, function (err, productDetails) {
+    if (err) return cb(err, null);
     var transformed = extend(formatProduct(product), {
       brand: formatBrand(productDetails.brand),
       images: formatImages(productDetails.images),
@@ -80,7 +94,7 @@ var getProduct = function (bigC, id, cb) {
 };
 
 var getProducts = function (bigC, cb) {
-  var query = {limit: 10};
+  var query = {};
 
   bigC.getProducts(bigC, query, function (err, products) {
     if (err) return cb(err, null);
