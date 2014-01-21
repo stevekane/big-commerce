@@ -1,5 +1,8 @@
-var express = require('express')
-  , path = require('path')
+var path = require('path')
+  , express = require('express')
+  , async = require('async')
+  , _ = require('lodash')
+  , partial = _.partial
   , config = require('./config.json')
   , BigCommerce = require('./apis/big-commerce')
   , getProduct = require('./routes/product').getProduct
@@ -17,23 +20,6 @@ var bigC = new BigCommerce({
   cache: {},
   debug: true
 });
-
-/*
-To avoid redundant hits on the API, we are going to implement a very simple
-cache.  In the future, we may wish to make this layer a more exhaustive cache
-and perhaps store both raw returned AND transformed data.  Perhaps we would only
-cache raw returned data and transform it on demand only.  For example, when requested
-by a web client or another groupon service
-*/
-//here we seed the cache with categories and option values
-cacheOptions(bigC, function (err, optionsWithValues) {
-  console.log(bigC.cache.options, "Options are cached."); 
-});
-
-cacheCategories(bigC, function (err, categories) {
-  console.log(bigC.cache.categories, "Categories are cached."); 
-});
-
 
 app.use(express.logger());
 app.use(express.methodOverride());
@@ -72,4 +58,21 @@ api.get('/products/', function (req, res) {
   });
 });
 
-app.listen(1234);
+/*
+To avoid redundant hits on the API, we are going to implement a very simple
+cache.  In the future, we may wish to make this layer a more exhaustive cache
+and perhaps store both raw returned AND transformed data.  Perhaps we would only
+cache raw returned data and transform it on demand only.  For example, when requested
+by a web client or another groupon service
+*/
+async.parallel({
+  options: partial(cacheOptions, bigC),
+  categories: partial(cacheCategories, bigC)
+}, function (err, results) {
+  if (err) throw new Error("precaching failed");
+  else {
+    console.log(results.options, "have been cached");
+    console.log(results.categories, "have been cached");
+    app.listen(1234);
+  }
+});
