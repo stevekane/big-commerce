@@ -27,7 +27,7 @@ var buildBaseOptions = function (bigC, urlSuffix) {
       sendImmediately: true       
     },
     json: true,
-    timeout: 5000,
+    timeout: 10000,
     headers: {
       "Content-type": "application/json",
     },
