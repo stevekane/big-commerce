@@ -19,7 +19,6 @@ var cacheOptions = function (bigC, cb) {
 
     if (err) return cb(err, null); 
     async.map(options, getOptionWithValues, function (err, optionsWithValues) {
-      //TODO: actually....cache something
       bigC.cache.options = optionsWithValues;
       cb(err, optionsWithValues);
     });
