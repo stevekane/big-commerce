@@ -1,16 +1,16 @@
 var async = require('async')
   , _ = require('lodash')
-  , formatProduct = require('../transforms/product')
-  , formatOptions = require('../transforms/options')
-  , formatBrand = require('../transforms/brand')
-  , formatImages = require('../transforms/images')
-  , formatCategories = require('../transforms/categories')
   , find = _.find
   , partial = _.partial
   , pluck = _.pluck
   , map = _.map
   , extend = _.extend
   , clone = _.clone
+  , formatProduct = require('../transforms/product')
+  , formatOptions = require('../transforms/options')
+  , formatBrand = require('../transforms/brand')
+  , formatImages = require('../transforms/images')
+  , formatCategories = require('../transforms/categories')
 
 /*
  * To save on redundant requests to the server we will first check

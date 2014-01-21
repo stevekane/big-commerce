@@ -31,6 +31,7 @@ var addProductData = function (product, traitCombo) {
   return {
     price_amount: product.price,
     value_amount: product.sale_price,  
+    quantity_sold: product.total_sold,
     traits: traitCombo
   };
 };
