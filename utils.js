@@ -12,7 +12,7 @@ var removeSlashes = function (str) {
 };
 
 var buildImageUrl = function (bigC, slug) {
-  return path.join(bigC.storeURL, "product_images", slug);
+  return bigC.storeURL + "product_images/" + slug;
 };
 var buildUrl = function (bigC, slug) {
   return path.join(bigC.storeURL, slug);
