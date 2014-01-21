@@ -4,9 +4,18 @@ var express = require('express')
   , BigCommerce = require('./apis/big-commerce')
   , getProduct = require('./routes/product').getProduct
   , getProducts = require('./routes/product').getProducts
+  , cacheOptions = require('./cache/options').cacheOptions
   , bigC = new BigCommerce(config.api.username, config.api.key, config.api.url)
   , app = express()
   , apiUri = "/api/v1"
+
+var bigC = new BigCommerce({
+  user: config.api.username,
+  pass: config.api.key,
+  storeURL: config.api.url,
+  cache: {},
+  debug: true
+});
 
 /*
 To avoid redundant hits on the API, we are going to implement a very simple
@@ -15,27 +24,11 @@ and perhaps store both raw returned AND transformed data.  Perhaps we would only
 cache raw returned data and transform it on demand only.  For example, when requested
 by a web client or another groupon service
 */
-
-var bigCache = {};
-
-//TODO: implement
-//utiltiy to fetch options w/ values from BigCommerce API and store in cache
-var seedOptions = function (cache, cb) {
-  bigC.getOptions(function () {
-   
-  }); 
-};
-
 //here we seed the cache with categories and option values
-
-
-var bigC = new BigCommerce({
-  user: config.api.username,
-  pass: config.api.key,
-  storeURL: config.api.url,
-  cache: bigCache,
-  debug: true
+cacheOptions(bigC, function (err, optionsWithValues) {
+  console.log(bigC.cache.options, "Options are cached."); 
 });
+
 
 app.use(express.logger());
 app.use(express.methodOverride());
