@@ -9,8 +9,11 @@ var BigCommerce = function (options) {
 //once options are configured, fire off our request w/ request
 var fetch = function (options, cb) {
   return request(options, function (err, res, result) {
-    if (res.statusCode === 404) return cb(new Error("Resource not found", null));
-    else return cb(err, result); 
+    if (!res || res.statusCode === 404) {
+      return cb(new Error("Resource not found", null));
+    } else {
+      return cb(err, result); 
+    }
   });
 };
 
