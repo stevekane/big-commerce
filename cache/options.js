@@ -1,6 +1,5 @@
 var async = require('async')
   , _ = require('lodash')
-  , property = _.property
   , clone = _.clone
   , extend = _.extend
 

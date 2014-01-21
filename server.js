@@ -69,7 +69,7 @@ async.parallel({
   options: partial(cacheOptions, bigC),
   categories: partial(cacheCategories, bigC)
 }, function (err, results) {
-  if (err) throw new Error("precaching failed");
+  if (err) throw new Error("pre-caching failed");
   else {
     console.log(results.options, "have been cached");
     console.log(results.categories, "have been cached");
