@@ -29,8 +29,8 @@ var transformToTrait = function (product, option) {
 //add product data like price and eventually images to each traitCombo
 var addProductData = function (product, traitCombo) {
   return {
-    price_amount: product.price,
-    value_amount: product.sale_price,  
+    price_amount: product.calculated_price,
+    value_amount: product.price,  
     quantity_sold: product.total_sold,
     traits: traitCombo
   };
