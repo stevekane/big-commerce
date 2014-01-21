@@ -1,7 +1,8 @@
 var _ = require('lodash')
   , map = _.map
   , partial = _.partial
-  , calculatePermutationsAsArrays = require('../utils').calculatePermutationsAsArrays
+  , permutagen = require('../modules/permutagen/permutagen')
+  , calculatePermutationsAsArrays = permutagen.calculatePermutationsAsArrays
 
 /* 
  * BigCommerce's api has a different notion of options
