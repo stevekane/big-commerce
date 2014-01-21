@@ -4,6 +4,7 @@ var async = require('async')
   , partial = _.partial
   , pluck = _.pluck
   , map = _.map
+  , first = _.first
   , extend = _.extend
   , clone = _.clone
   , formatProduct = require('../transforms/product')
@@ -76,11 +77,16 @@ var buildFullProduct = function (bigC, product, cb) {
     options: partial(getOptionsWithValues, bigC, product.options.url)
   }, function (err, productDetails) {
     if (err) return cb(err, null);
+    var images = formatImages(bigC, productDetails.images)
+      , options = formatOptions(bigC, product, first(images), productDetails.options)
+      , categories = formatCategories(bigC, productDetails.categories)
+      , brand = formatBrand(bigC, productDetails.brand);
+
     var transformed = extend(formatProduct(bigC, product), {
-      brand: formatBrand(bigC, productDetails.brand),
-      images: formatImages(bigC, productDetails.images),
-      categories: formatCategories(bigC, productDetails.categories),
-      options: formatOptions(bigC, product, productDetails.options)
+      brand: brand,
+      images: images,
+      categories: categories,
+      options: options
     });
     return cb(err, transformed);
   });
