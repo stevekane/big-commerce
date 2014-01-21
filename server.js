@@ -10,7 +10,6 @@ var path = require('path')
   , cacheOptions = require('./cache/options').cacheOptions
   , cacheCategories = require('./cache/categories').cacheCategories
   , app = express()
-  , apiUri = "/api/v1"
 
 var bigC = new BigCommerce({
   user: config.api.username,
@@ -27,15 +26,7 @@ app.use(express.cookieParser());
 app.use(express.json());
 app.use(express.urlencoded());
 
-//super thin wrapper around express to enforce an api prefix uri
-var api = {
-  get: function (uri, cb) { return app.get(path.join(apiUri, uri), cb) },
-  post: function (uri, cb) { return app.post(path.join(apiUri, uri), cb) },
-  put: function (uri, cb) { return app.put(path.join(apiUri, uri), cb) },
-  delete: function (uri, cb) { return app.delete(path.join(apiUri, uri), cb) }
-};
-
-api.get('/products/:product_id', function (req, res) {
+app.get('/api/v1/products/:product_id', function (req, res) {
   var id = req.params.product_id;
 
   if (id) {
@@ -47,7 +38,7 @@ api.get('/products/:product_id', function (req, res) {
   }
 });
 
-api.get('/products', function (req, res) {
+app.get('/api/v1/products', function (req, res) {
   return getProducts(bigC, function (err, products) {
     return res.json(products); 
   });
