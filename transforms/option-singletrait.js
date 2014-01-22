@@ -1,6 +1,8 @@
 var _ = require('lodash')
   , map = _.map
   , partial = _.partial
+  , partialRight = _.partialRight
+  , compose = _.compose
   , reject = _.reject
   , flatten = _.flatten
 
@@ -13,22 +15,22 @@ var _ = require('lodash')
  * price, discount, availability etc 
  */
 
-
 //expand our option into a list of trait permutations with price and name data
-var transformToTraits = function (option) {
-  return map(option.values, function (value) {
-    return {
-      name: option.display_name,
-      value: value.label
-    };
-  });
+var expandTraits = function (options) {
+  return flatten(
+    map(options, function (option) {
+      return map(option.values, function (value) {
+        return {
+          name: option.display_name,
+          value: value.label
+        };
+      });
+    })
+  );
 };
 
-var formatOptions = function (bigC, product, imageAlt, options) {
-  if (!options) return [];
-  var nonSizeOptions = reject(options, {display_name: "Size"})
-    , traits = flatten(map(nonSizeOptions, transformToTraits))
-
+//map over our traits converting them into expected option format
+var buildOptions = function (product, imageAlt, traits) {
   return map(traits, function (trait) {
     return {
       name: trait.name,
@@ -39,6 +41,16 @@ var formatOptions = function (bigC, product, imageAlt, options) {
       image_uri: imageAlt
     }; 
   });
+};
+
+var removeSizeOptions = partialRight(reject, {display_name: "Size"})
+
+var formatOptions = function (bigC, product, imageAlt, options) {
+  var options = options || []
+    , format = partial(buildOptions, product, imageAlt)
+    , formatPipeline = compose(format, expandTraits, removeSizeOptions);
+
+  return formatPipeline(options);
 };
 
 module.exports = formatOptions;

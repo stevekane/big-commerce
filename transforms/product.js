@@ -1,7 +1,6 @@
 var _ = require('lodash')
   , compose = _.compose
   , partial = _.partial
-  , invoke = _.invoke
   , buildUrl = require('../utils').buildUrl
   , stripFrom = require('../utils').stripFrom
 

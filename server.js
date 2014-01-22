@@ -51,12 +51,15 @@ var pushProduct = function (product, cb) {
 };
 
 app.get('/api/v1/products/:product_id', function (req, res) {
+  //getProduct(bigC, req.params.product_id, function (err, product) {
+  //  if (err) return res.json(400, {error: "bummer"});
+  //  pushProduct(product, function (err, product) {
+  //    if (err) return res.json(400, {error: "bummer"});
+  //    else return res.json(200, product); 
+  //  }); 
+  //});
   getProduct(bigC, req.params.product_id, function (err, product) {
-    if (err) return res.json(400, {error: "bummer"});
-    pushProduct(product, function (err, product) {
-      if (err) return res.json(400, {error: "bummer"});
-      else return res.json(200, product); 
-    }); 
+    return res.json(200, product);  
   });
 });
 

@@ -5,6 +5,8 @@ var path = require('path')
   , buildImageUrl = require('../utils').buildImageUrl
 
 var formatImage = function (url, image) {
+  var image = image || {};
+
   return buildImageUrl(url, image.image_file);
 };
 
