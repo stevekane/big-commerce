@@ -62,6 +62,7 @@ we will also add support to cache values retrieved in these calls if needed
 var getOptionsWithValues = function (bigC, url, cb) {
   bigC.get(bigC, url, function (err, options) {
     if (err) return cb(err, options);
+
     var options = options || [];
     var cached = getCachedById(bigC.cache.options, pluck(options, "option_id")); 
 
@@ -78,6 +79,7 @@ var buildFullProduct = function (bigC, product, cb) {
     options: partial(getOptionsWithValues, bigC, product.options.url)
   }, function (err, productDetails) {
     if (err) return cb(err, null);
+
     var images = formatImages(bigC, productDetails.images)
       , defaultImage = images[0] || ""
       , options = formatOptions(bigC, product, defaultImage, productDetails.options)
