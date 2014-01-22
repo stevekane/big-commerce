@@ -8,10 +8,10 @@ var flipMap = function (fn, list, cb) {
 };
 
 var buildImageUrl = function (bigC, slug) {
-  return bigC.storeURL + "product_images/" + slug;
+  return bigC.storeURL + "product_images/" + slug.replace("/", "");
 };
 var buildUrl = function (bigC, slug) {
-  return bigC.storeURL + slug;
+  return bigC.storeURL + slug.replace("/", "");
 };
 
 var stripFrom = function (sub, str) {

@@ -61,15 +61,19 @@ app.get('/api/v1/products/:product_id', function (req, res) {
 });
 
 app.get('/api/v1/products', function (req, res) {
-  getProducts(bigC, function (err, products) {
-    //FIXME: TEMP CHECK AROUND ERR
-    var goodProducts = compact(products, null);
+  //getProducts(bigC, function (err, products) {
+  //  //FIXME: TEMP CHECK AROUND ERR
+  //  var goodProducts = compact(products, null);
 
-    //if (err) return res.json(400, {error: "bummer"});
-    async.map(goodProducts, pushProduct, function (err, products) {
-      if (err) return res.json(400, {error: "bummer"}); 
-      else return res.json(200, products);
-    });
+  //  //if (err) return res.json(400, {error: "bummer"});
+  //  async.map(goodProducts, pushProduct, function (err, products) {
+  //    if (err) return res.json(400, {error: "bummer"}); 
+  //    else return res.json(200, products);
+  //  });
+  //});
+  getProducts(bigC, function (err, products) {
+    var goodProducts = compact(products, null);
+    return res.json(200, goodProducts);
   });
 });
 
