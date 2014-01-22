@@ -79,7 +79,8 @@ var buildFullProduct = function (bigC, product, cb) {
   }, function (err, productDetails) {
     if (err) return cb(err, null);
     var images = formatImages(bigC, productDetails.images)
-      , options = formatOptions(bigC, product, images[0], productDetails.options)
+      , defaultImage = images[0] || ""
+      , options = formatOptions(bigC, product, defaultImage, productDetails.options)
       , categories = formatCategories(bigC, productDetails.categories)
       , brand = formatBrand(bigC, productDetails.brand);
 

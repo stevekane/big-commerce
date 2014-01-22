@@ -18,9 +18,14 @@ var buildUrl = function (bigC, slug) {
   return path.join(bigC.storeURL, slug);
 };
 
+var stripFrom = function (sub, str) {
+  return str.replace(sub, "");
+};
+
 module.exports = {
   flipMap: flipMap,
   removeSlashes: removeSlashes,
   buildImageUrl: buildImageUrl,
-  buildUrl: buildUrl
+  buildUrl: buildUrl,
+  stripFrom: stripFrom
 };

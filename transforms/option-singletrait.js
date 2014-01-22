@@ -31,11 +31,8 @@ var formatOptions = function (bigC, product, imageAlt, options) {
 
   return map(traits, function (trait) {
     return {
-      trait: trait.name + ", " + trait.value,
-      //trait: {
-      //  name: trait.name,
-      //  value: trait.value
-      //},
+      name: trait.name,
+      value: trait.value,
       price_amount: product.calculated_price * 100,
       value_amount: product.price * 100,  
       quantity_sold: product.total_sold,
