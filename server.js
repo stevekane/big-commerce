@@ -31,25 +31,30 @@ app.use(express.cookieParser());
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.get('/api/v1/products/:product_id', function (req, res) {
-  getProduct(bigC, req.params.product_id, function (err, product) {
+var pushProduct = function (product, cb) {
+  async.parallel({
+    brand: partial(createBrand, product.brand),
+    deal: partial(createDeal, product)
+  }, function (err, results) {
+    if (err) return cb(err); 
 
     async.parallel({
-      brand: partial(createBrand, product.brand),
-      deal: partial(createDeal, product)
-    }, function (err, results) {
-      if (err) return res.json(400, {err: err}); 
+      options: function (cb) { 
+        async.map(product.options, partial(addOptionToDeal, results.deal.deal), cb)
+      },
+      brand: partial(addBrandToDeal, results.deal.deal, results.brand.brand)
+    }, function (err, updateData) {
+      return cb(err, product);
+    });   
+  });
+};
 
-      async.parallel({
-        options: function (cb) { 
-          async.map(product.options, partial(addOptionToDeal, results.deal.deal), cb)
-        },
-        brand: partial(addBrandToDeal, results.deal.deal, results.brand.brand)
-      }, function (err, updateData) {
-        if (err) return res.json(400, {err: err}); 
-        return res.json(200, product);
-      });   
-    });
+app.get('/api/v1/products/:product_id', function (req, res) {
+  getProduct(bigC, req.params.product_id, function (err, product) {
+    pushProduct(product, function (err, product) {
+      if (err) return res.json(400, {error: "bummer"});
+      else return res.json(200, product); 
+    }); 
   });
 });
 

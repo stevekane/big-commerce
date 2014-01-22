@@ -20,8 +20,6 @@ var createDeal = function (product, cb) {
   };
 
   return request.post(options, function (err, res, data) {
-    console.log("createDeal", options.url);
-    console.log("createDeal", err);
     return cb(err, data); 
   });
 };
@@ -38,8 +36,6 @@ var createBrand = function (brand, cb) {
   };
 
   return request.post(options, function (err, res, data) {
-    console.log("createBrand", options.url);
-    console.log("createBrand", err);
     return cb(err, data);   
   });
 };
@@ -59,8 +55,6 @@ var addBrandToDeal = function (deal, brand, cb) {
   };
 
   return request.put(options, function (err, res, data) {
-    console.log("addBrandToDeal", options.url);
-    console.log("addBrandToDeal", err);
     return cb(err, data); 
   });
 };
@@ -77,8 +71,6 @@ var addOptionToDeal = function (deal, option, cb) {
   };
 
   return request.post(options, function (err, res, data) {
-    console.log("addOptionToDeal", options.url);
-    console.log("addOptionToDeal", err);
     return cb(err, data); 
   });
 };
