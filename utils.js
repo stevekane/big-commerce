@@ -7,11 +7,11 @@ var flipMap = function (fn, list, cb) {
   return async.map(list, fn, cb); 
 };
 
-var buildImageUrl = function (bigC, slug) {
-  return bigC.storeURL + "product_images/" + slug.replace("/", "");
+var buildImageUrl = function (url, slug) {
+  return url + "product_images/" + slug.replace("/", "");
 };
-var buildUrl = function (bigC, slug) {
-  return bigC.storeURL + slug.replace("/", "");
+var buildUrl = function (url, slug) {
+  return url + slug.replace("/", "");
 };
 
 var stripFrom = function (sub, str) {

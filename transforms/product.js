@@ -14,7 +14,7 @@ var formatTitle = compose(trim, removeSample);
 var formatProduct = function (bigC, product) {
   return {
     title: formatTitle(product.name),
-    deal_url: buildUrl(bigC, product.custom_url),
+    deal_url: buildUrl(bigC.storeURL, product.custom_url),
     source_id: product.id,
     source_type: "big-commerce",
     slug: formatAsSlug(product.custom_url)

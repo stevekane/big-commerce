@@ -1,15 +1,18 @@
 var path = require('path')
   , _ = require('lodash')
-  , compose = _.compose
   , map = _.map
   , partial = _.partial
-  , property = _.property
   , buildImageUrl = require('../utils').buildImageUrl
+
+var formatImage = function (url, image) {
+  return buildImageUrl(url, image.image_file);
+};
 
 //format images returned by BigCommerce for groupon's api
 var formatImages = function (bigC, images) {
-  if (!images) return [];
-  return map(images, compose(partial(buildImageUrl, bigC), property("image_file")));
+  var images = images || [];
+
+  return map(images, partial(formatImage, bigC.storeURL));
 };
 
 module.exports = formatImages;
