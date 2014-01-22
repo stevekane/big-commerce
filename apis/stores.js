@@ -4,12 +4,7 @@ var request = require('request')
   , storesHost = require('../config.json').stores.url;
 
 //create a new deal based on a big-commerce product
-var createDeal = function (product, cb) {
-  var deal = {
-    title: product.title,
-    source_id: product.source_id,
-    source_type: product.source_type
-  }
+var createDeal = function (deal, cb) {
   var options = {
     url: storesHost + "deals",
     headers: {

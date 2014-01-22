@@ -82,14 +82,16 @@ var buildFullProduct = function (bigC, product, cb) {
       , defaultImage = images[0] || ""
       , options = formatOptions(bigC, product, defaultImage, productDetails.options)
       , categories = formatCategories(bigC, productDetails.categories)
-      , brand = formatBrand(bigC, productDetails.brand);
+      , brand = formatBrand(bigC, productDetails.brand)
+      , deal = formatProduct(bigC, product);
 
-    var transformed = extend(formatProduct(bigC, product), {
+    var transformed = {
+      deal: deal,
       brand: brand,
       images: images,
       categories: categories,
       options: options
-    });
+    };
     return cb(err, transformed);
   });
 };

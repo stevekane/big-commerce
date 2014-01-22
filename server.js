@@ -35,7 +35,7 @@ app.use(express.urlencoded());
 var pushProduct = function (product, cb) {
   async.parallel({
     brand: partial(createBrand, product.brand),
-    deal: partial(createDeal, product)
+    deal: partial(createDeal, product.deal)
   }, function (err, results) {
     if (err) return cb(err); 
 
