@@ -29,8 +29,6 @@ var formatOptions = function (bigC, product, imageAlt, options) {
   var nonSizeOptions = reject(options, {display_name: "Size"})
     , traits = flatten(map(nonSizeOptions, transformToTraits))
 
-  console.log(imageAlt);
-
   return map(traits, function (trait) {
     return {
       trait: trait.name + ", " + trait.value,

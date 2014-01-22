@@ -20,6 +20,7 @@ var createDeal = function (product, cb) {
   };
 
   return request.post(options, function (err, res, data) {
+    console.log(options.url, err);
     return cb(err, data); 
   });
 };
@@ -36,6 +37,7 @@ var createBrand = function (brand, cb) {
   };
 
   return request.post(options, function (err, res, data) {
+    console.log(options.url, err);
     return cb(err, data);   
   });
 };
@@ -55,6 +57,7 @@ var addBrandToDeal = function (deal, brand, cb) {
   };
 
   return request.put(options, function (err, res, data) {
+    console.log(options.url, err);
     return cb(err, data); 
   });
 };
@@ -71,6 +74,7 @@ var addOptionToDeal = function (deal, option, cb) {
   };
 
   return request.post(options, function (err, res, data) {
+    console.log(options.url, err);
     return cb(err, data); 
   });
 };

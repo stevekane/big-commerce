@@ -3,6 +3,7 @@ var path = require('path')
   , async = require('async')
   , _ = require('lodash')
   , partial = _.partial
+  , compact = _.compact
   , config = require('./config.json')
   , BigCommerce = require('./apis/big-commerce')
   , storesApi = require('./apis/stores')
@@ -22,10 +23,10 @@ var bigC = new BigCommerce({
   apiURL: config.api.url,
   storeURL: config.store.url,
   cache: {},
-  debug: true
+  //debug: true
 });
 
-app.use(express.logger());
+//app.use(express.logger());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
 app.use(express.json());
@@ -51,6 +52,7 @@ var pushProduct = function (product, cb) {
 
 app.get('/api/v1/products/:product_id', function (req, res) {
   getProduct(bigC, req.params.product_id, function (err, product) {
+    if (err) return res.json(400, {error: "bummer"});
     pushProduct(product, function (err, product) {
       if (err) return res.json(400, {error: "bummer"});
       else return res.json(200, product); 
@@ -59,8 +61,15 @@ app.get('/api/v1/products/:product_id', function (req, res) {
 });
 
 app.get('/api/v1/products', function (req, res) {
-  return getProducts(bigC, function (err, products) {
-    return res.json(products); 
+  getProducts(bigC, function (err, products) {
+    //FIXME: TEMP CHECK AROUND ERR
+    var goodProducts = compact(products, null);
+    console.log(goodProducts.length, products.length);
+    //if (err) return res.json(400, {error: "bummer"});
+    async.map(goodProducts, pushProduct, function (err, products) {
+      if (err) return res.json(400, {error: "bummer"}); 
+      else return res.json(200, products);
+    });
   });
 });
 
