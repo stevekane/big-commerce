@@ -36,7 +36,7 @@ var formatOptions = function (bigC, product, imageAlt, options) {
       price_amount: product.calculated_price * 100,
       value_amount: product.price * 100,  
       quantity_sold: product.total_sold,
-      image_uri: imageAlt,
+      image_uri: imageAlt
     }; 
   });
 };

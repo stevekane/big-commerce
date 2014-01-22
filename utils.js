@@ -7,15 +7,11 @@ var flipMap = function (fn, list, cb) {
   return async.map(list, fn, cb); 
 };
 
-var removeSlashes = function (str) {
-  return str.replace(/\//g, "");
-};
-
 var buildImageUrl = function (bigC, slug) {
   return bigC.storeURL + "product_images/" + slug;
 };
 var buildUrl = function (bigC, slug) {
-  return path.join(bigC.storeURL, slug);
+  return bigC.storeURL + slug;
 };
 
 var stripFrom = function (sub, str) {
@@ -24,7 +20,6 @@ var stripFrom = function (sub, str) {
 
 module.exports = {
   flipMap: flipMap,
-  removeSlashes: removeSlashes,
   buildImageUrl: buildImageUrl,
   buildUrl: buildUrl,
   stripFrom: stripFrom
