@@ -48,9 +48,9 @@ var removeSizeOptions = partialRight(reject, {display_name: "Size"})
 var formatOptions = function (bigC, product, imageAlt, options) {
   var options = options || []
     , format = partial(buildOptions, product, imageAlt)
-    , formatPipeline = compose(format, expandTraits, removeSizeOptions);
+    , processOptions = compose(format, expandTraits, removeSizeOptions);
 
-  return formatPipeline(options);
+  return processOptions(options);
 };
 
 module.exports = formatOptions;
