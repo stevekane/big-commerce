@@ -64,7 +64,7 @@ app.get('/api/v1/products', function (req, res) {
   getProducts(bigC, function (err, products) {
     //FIXME: TEMP CHECK AROUND ERR
     var goodProducts = compact(products, null);
-    console.log(goodProducts.length, products.length);
+
     //if (err) return res.json(400, {error: "bummer"});
     async.map(goodProducts, pushProduct, function (err, products) {
       if (err) return res.json(400, {error: "bummer"}); 
